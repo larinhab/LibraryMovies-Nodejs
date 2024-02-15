@@ -19,7 +19,6 @@ class UserController {
             throw new AppError("E-mail already registered", 401)
         };
 
-
         if(!name) {
             throw new AppError("Name is mandatory", 400)
         };
@@ -42,30 +41,30 @@ class UserController {
         const user = await knex("users").where({id}).first()
 
         if(!user){
-            throw new AppError("User not found", 400)
+            throw new AppError("Usuário não encontrado :(", 400)
         }
 
         const userWithNewEmail = await knex("users").where({email}).first()
 
         if(userWithNewEmail && userWithNewEmail.id !== user.id) {
-            throw new AppError("Email already being used!", 400)
+            throw new AppError("Email já está em uso", 400)
         }
 
         user.name = name ?? user.name
         user.email = email ?? user.email
 
         if(password && !old_password){
-            throw new AppError("Inform your old passoword to update", 400)
+            throw new AppError("Informe sua senha antiga!", 400)
         }
 
         const checkPassoword = await compare(old_password, user.password)
         
         if(!checkPassoword){
-            throw new AppError("Old passoword does not match")
+            throw new AppError("A senha antiga não confere!")
         }
 
         if(password === old_password) {
-            throw new AppError("New password must be different from the old one")
+            throw new AppError("A senha nova deve ser diferente da antiga!")
         }
 
         user.password = await hash(password, 8)
@@ -79,7 +78,18 @@ class UserController {
 
 
         return response.status(200).json({
-            message: "User succefully updated!"
+            message: "Usuário alterado com sucesso!"
+        })
+    }
+
+    async delete(request, response) {
+        const { name, email, password, avatar } = request.body
+        const { id } = request.params 
+
+        await knex("users").where({ id }).delete()
+
+        return response.status(200).json({
+            message: "Usuário deletado com sucesso!"
         })
     }
 };
