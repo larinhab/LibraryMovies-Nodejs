@@ -1,4 +1,4 @@
-//require("express-async-errors")
+require("express-async-errors")
 
 const express = require("express") // IMPORTEI EXPRESS - 1
 const app = express() // INICIALIZEI EXPRESS - 2
