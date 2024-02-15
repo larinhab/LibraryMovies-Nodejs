@@ -6,5 +6,6 @@ const userController = new UserController
 
 usersRoutes.post('/', userController.create)
 usersRoutes.put('/:id', userController.uptade)
+usersRoutes.delete('/:id', userController.delete)
 
 module.exports = usersRoutes
