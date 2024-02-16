@@ -1,5 +1,5 @@
+const AppError = require("../utilis/AppError");
 const knex = require("../database/Knex/knex");
-const AppError = require("../utilis/AppError")
 
 class NotesController {
   async create(request, response) {
