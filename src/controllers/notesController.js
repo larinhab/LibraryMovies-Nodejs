@@ -4,7 +4,7 @@ const knex = require("../database/Knex/knex");
 class NotesController {
   async create(request, response) {
     const { movie_title, movie_description, tags, movie_note } = request.body;
-    const { user_id } = request.params
+    const user_id  = request.user.id
     
     if (movie_note < 0  || movie_note > 5 ) {
       throw new AppError("A nota deve ser entre 0 e 5")
@@ -17,15 +17,16 @@ class NotesController {
       user_id
     });
 
-    const tagsInsert = tags.map(name => {
+      
+    const tagsInsert = tags.map((tag_name) => {
       return {
           note_id,
           user_id,
           tag_name
-      }
+      };
   });
 
-  await knex("movie_tags").insert(tagsInsert);
+  await knex("tags").insert(tagsInsert);
 
     return response.json();
   }
@@ -48,7 +49,7 @@ class NotesController {
     await knex("notes").where({ id }).delete()
 
     return response.json({
-      message: "Movie note delete sucefully!"
+      message: "Filme excluído com sucesso"
     })
   }
 
@@ -59,7 +60,7 @@ class NotesController {
     let notes;
 
     if (tags) {
-        const filterTags = tags.split(',').map(tag => tag.trim());
+        const filterTags = tags.split(',').map((tag) => tag.trim());
 
         notes = await knex("tags")
             .select([
@@ -75,14 +76,14 @@ class NotesController {
             .orderBy("notes.movie_title")
     } else {
         notes = await knex("notes")
-            .where({ user_id })
+            //.where({ user_id })
             .whereLike("movie_title", `%${title}%`)
             .orderBy("movie_title");
     }
 
         const userTags = await knex("tags").where({ user_id });
-        const notesWithTags = notes.map(note => {
-        const noteTags = userTags.filter(tag => tag.note_id === note.id);
+        const notesWithTags = notes.map((note) => {
+              const noteTags = userTags.filter((tag) => tag.note_id === note.id);
 
         return {
             ...note,

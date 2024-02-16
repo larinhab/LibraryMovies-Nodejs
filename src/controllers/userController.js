@@ -36,9 +36,9 @@ class UserController {
 
     async uptade(request, response) {
         const { old_password, password, email, name } = request.body
-        const { id } = request.params
+        const user_id = request.user.id
 
-        const user = await knex("users").where({id}).first()
+        const user = await knex("users").where({id: user_id}).first()
 
         if(!user){
             throw new AppError("Usuário não encontrado :(", 400)
@@ -69,7 +69,7 @@ class UserController {
 
         user.password = await hash(password, 8)
 
-        await knex("users").where({id}).update({
+        await knex("users").where({id: user_id}).update({
             name: user.name,
             email: user.email,
             password: user.password,
@@ -84,7 +84,7 @@ class UserController {
 
     async delete(request, response) {
         const { name, email, password, avatar } = request.body
-        const { id } = request.params 
+        const  user_id  = request.user.id
 
         await knex("users").where({ id }).delete()
 
