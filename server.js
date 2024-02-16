@@ -15,7 +15,7 @@ const sqliteConnection = require("./src/database/SQLite/connect")
 sqliteConnection()
 
 //
-const port = 3335 // 3
+const port = 3000 // 3
 app.listen(port, () => console.log(`Server is running on port: ${port}`)) // 4
 
 //
