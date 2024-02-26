@@ -10,7 +10,7 @@ class userAvatarController {
         const diskStorage = new DiskStorage()
 
         const user = await knex("users")
-        .where({ id: user_id}).first()
+        .where({ id: user_id }).first()
 
 
         if(!user){ 
@@ -28,7 +28,7 @@ class userAvatarController {
         .update(user)
         .where({id: user_id})
 
-        return response.json(user) 
+        return response.json(user);
     }
 }
 
