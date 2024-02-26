@@ -34,8 +34,11 @@ class NotesController {
   async show(request, response) {
     const { id } = request.params
 
-    const notes = await knex("notes").where({ id }).first()
-    const tags = await knex("tags").where({ note_id: id }).orderBy("tag_name")
+    const notes = await knex("notes")
+    .where({ id }).first()
+    const tags = await knex("tags")
+    .where({ note_id: id })
+    .orderBy("tag_name")
 
     return response.json({
       ...notes,
@@ -60,16 +63,10 @@ class NotesController {
     let notes;
 
     if (tags) {
-        const filterTags = tags.split(',').map(tag => tag.trim());
-
+        const filterTags = tags.split(',').map(tag => tag.trim())
+        console.log(filterTags)
+        
         notes = await knex("tags")
-            .select([
-                "notes.id",
-                "notes.movie_title",
-                "notes.user_id",
-            ])
-            .where("notes.user_id", user_id)
-            .whereLike("notes.movie_title", `%${title}%`)
             .whereIn("tag_name", filterTags)
             .innerJoin("notes", "notes.id", "tags.note_id")
             .groupBy("notes.id")
@@ -77,7 +74,7 @@ class NotesController {
     } else {
         notes = await knex("notes")
             //.where({ user_id })
-            .whereLike("movie_title", `%${title}%`)
+            .whereLike("movie_title", `%${movie_title}%`)
             .orderBy("movie_title");
     }
 

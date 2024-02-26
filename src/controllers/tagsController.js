@@ -9,7 +9,7 @@ class TagsController {
         .where({ user_id })
         .groupBy("tag_name")
 
-        return response.json(tags, 200)
+        return response.json(tags)
     }
 }
 
