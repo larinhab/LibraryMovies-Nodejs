@@ -10,7 +10,7 @@ class NotesController {
       throw new AppError("A nota deve ser entre 0 e 5")
     }
 
-    const [ note_id ] = await knex("notes").insert({
+    const note_id = await knex("notes").insert({
       movie_title,
       movie_description,
       movie_note,
@@ -18,7 +18,7 @@ class NotesController {
     });
 
       
-    const tagsInsert = tags.map((tag_name) => {
+    const tagsInsert = await knex("tags").map(tag_name => {
       return {
           note_id,
           user_id,
@@ -34,11 +34,11 @@ class NotesController {
   async show(request, response) {
     const { id } = request.params
 
-    const note = await knex("notes").where({ id }).first()
+    const notes = await knex("notes").where({ id }).first()
     const tags = await knex("tags").where({ note_id: id }).orderBy("tag_name")
 
     return response.json({
-      ...note,
+      ...notes,
       tags,
     })
   }
@@ -60,7 +60,7 @@ class NotesController {
     let notes;
 
     if (tags) {
-        const filterTags = tags.split(',').map((tag) => tag.trim());
+        const filterTags = tags.split(',').map(tag => tag.trim());
 
         notes = await knex("tags")
             .select([
@@ -82,8 +82,8 @@ class NotesController {
     }
 
         const userTags = await knex("tags").where({ user_id });
-        const notesWithTags = notes.map((note) => {
-              const noteTags = userTags.filter((tag) => tag.note_id === note.id);
+        const notesWithTags = notes.map(note => {
+              const noteTags = userTags.filter(tag => tag.note_id === note.id);
 
         return {
             ...note,

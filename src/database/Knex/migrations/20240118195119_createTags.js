@@ -1,6 +1,5 @@
 const knex = require("knex")
 
-
 exports.up = knex => knex.schema.createTable("tags", table => {
     table.increments("id")
     table.text("tag_name")
