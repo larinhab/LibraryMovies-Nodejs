@@ -3,8 +3,8 @@ const AppError = require("../utilis/AppError");
 const knex = require("../database/Knex/knex");
 
 class userAvatarController {
-    async uptade(request, response) {
-        const user_id = request.user.user_id
+    async uptade(request, response){
+        const user_id = request.user.id
         const avatarFilename = request.file.filename
 
         const diskStorage = new DiskStorage()
@@ -14,7 +14,7 @@ class userAvatarController {
 
 
         if(!user){ 
-            throw new AppError("Somente usuários autenticados podem mudar o avatar", 401)
+            throw new AppError("Somente usuários autenticados podem mudar o imagem", 401)
         }
     
         if(user.avatar){ // VERIFICA SE EXISTE UMA FOTO, SE ESXISTE UMA FOTO, PEGO A FOTO E DELETO ELA
@@ -22,7 +22,8 @@ class userAvatarController {
         }
 
         const filename = await diskStorage.saveFile(avatarFilename) // SALVANDO O AVATAR CORETO
-        user.avatar = filename;
+
+        user.avatar = filename
 
         await knex("users")
         .update(user)

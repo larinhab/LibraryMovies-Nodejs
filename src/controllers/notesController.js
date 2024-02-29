@@ -3,28 +3,27 @@ const knex = require("../database/Knex/knex");
 
 class NotesController {
   async create(request, response) {
-    const { movie_title, movie_description, tags, movie_note } = request.body;
+    const { movie_title, movie_description, tag_name, movie_note } = request.body;
     const user_id  = request.user.id
     
     if (movie_note < 0  || movie_note > 5 ) {
       throw new AppError("A nota deve ser entre 0 e 5")
     }
 
-    const note_id = await knex("notes").insert({
+    const [ note_id ] = await knex("notes").insert({
       movie_title,
       movie_description,
       movie_note,
       user_id
     });
 
-      
-    const tagsInsert = await knex("tags").map(tag_name => {
+    const tagsInsert = tag_name.map((tag_name) => {
       return {
-          note_id,
-          user_id,
-          tag_name
+        note_id,
+        tag_name,
+        user_id,
       };
-  });
+    });
 
   await knex("tags").insert(tagsInsert);
 
@@ -57,13 +56,14 @@ class NotesController {
   }
 
   async index(request, response) { // CRIADA PARA LISTAR AS NOTAS
-    const { movie_title, tags } = request.query //PEGANDO O USUARIO DE UMA QUERY DENTRO DO INSOMINIA
+    const { movie_title, tag_name } = request.query //PEGANDO O USUARIO DE UMA QUERY DENTRO DO INSOMINIA
     const user_id = request.user.id
 
     let notes;
 
-    if (tags) {
+    if(tag_name) {
         const filterTags = tags.split(',').map(tag => tag.trim())
+
         console.log(filterTags)
         
         notes = await knex("tags")
