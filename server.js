@@ -8,8 +8,8 @@ const req = require("express/lib/request")
 app.use(express.json()) // DEFININDO O PADRÃO DAS REQUISIÇOES
 
 const routes = require("./src/routes")
+app.use(cors()) // USANDO O CORS COMPARTILHAMENTO DE RECURSOS 
 app.use(routes)
-app.use(cors()) // USANDO O CORS
 
 // CONECTANDO SQL LITE
 
