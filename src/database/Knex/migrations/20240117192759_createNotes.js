@@ -5,8 +5,8 @@ exports.up = knex => knex.schema.createTable("notes", table => {
     table.increments("id")
     table.text("movie_title")
     table.text("movie_description")
-    table.integer("movie_note")
-
+    table.integer("rating")
+    
     table.integer("user_id").references("id").inTable("users")
 
     table.timestamp("created_at").default(knex.fn.now())
