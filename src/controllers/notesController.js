@@ -3,24 +3,24 @@ const knex = require("../database/Knex/knex");
 
 class NotesController {
   async create(request, response) {
-    const { movie_title, movie_description, tag_name, movie_note } = request.body;
+    const { movie_title, movie_description, tags, rating } = request.body;
     const user_id  = request.user.id
     
-    if (movie_note < 0  || movie_note > 5 ) {
+    if (rating < 0  || rating > 5 ) {
       throw new AppError("A nota deve ser entre 0 e 5")
     }
 
     const [ note_id ] = await knex("notes").insert({
       movie_title,
       movie_description,
-      movie_note,
+      rating,
       user_id
     });
 
-    const tagsInsert = tag_name.map((tag_name) => {
+    const tagsInsert = tags.map(tag_name => {
       return {
-        note_id,
         tag_name,
+        note_id,
         user_id,
       };
     });
@@ -35,6 +35,7 @@ class NotesController {
 
     const notes = await knex("notes")
     .where({ id }).first()
+
     const tags = await knex("tags")
     .where({ note_id: id })
     .orderBy("tag_name")

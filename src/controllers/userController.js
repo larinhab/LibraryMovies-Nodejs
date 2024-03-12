@@ -20,7 +20,7 @@ class UserController {
         };
 
         if(!name) {
-            throw new AppError("Name is mandatory", 400)
+            throw new AppError("Name is mandatory", 401)
         };
 
         await knex("users").insert({

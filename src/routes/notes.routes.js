@@ -9,8 +9,8 @@ notesRoutes.use(ensureAuthenticated)
 
 notesRoutes.post('/', notesController.create)
 notesRoutes.delete('/:id', notesController.delete)
-notesRoutes.get('/:id', notesController.show)
-notesRoutes.get('/', notesController.index)
+notesRoutes.get('/:id', ensureAuthenticated, notesController.show)
+notesRoutes.get('/', ensureAuthenticated, notesController.index)
 
 
 module.exports = notesRoutes
