@@ -1,7 +1,6 @@
 const AppError = require("../utilis/AppError");
 const knex = require("../database/Knex/knex");
 const { hash, compare} = require("bcryptjs");
-const { checkPrime } = require("crypto");
 
 class UserController {
     async create(request, response) {
@@ -16,11 +15,11 @@ class UserController {
          console.log(email)
 
         if(checkIfUserExists){
-            throw new AppError("E-mail already registered", 401)
+            throw new AppError("E-mail já registrado", 401)
         };
 
         if(!name) {
-            throw new AppError("Name is mandatory", 401)
+            throw new AppError("Name é obrigatório", 401)
         };
 
         await knex("users").insert({
@@ -30,7 +29,7 @@ class UserController {
         });
 
         return response.json({
-            message: "Sucessfully Registered!"
+            message: "Registrado com sucesso!"
         })
     }
 

@@ -74,7 +74,7 @@ class NotesController {
         .orderBy("notes.movie_title")
       } else {
         notes = await knex("notes")
-        //.where({ user_id })
+        .where({ user_id }) // PARA MOSTRAR NOTAS SOMENTE DO USUARIO LOGADO
         .whereLike("movie_title", `%${movie_title}%`)
         .orderBy("movie_title");
       }
