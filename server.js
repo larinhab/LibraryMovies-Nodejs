@@ -1,4 +1,8 @@
+// NPM RUN DEV: RODA EM DESENVOLVIMENTO
+// NPM START VAI RODAR EM PRODUÇÃO
+
 require("express-async-errors")
+require("dotenv/config") // ADICIONANDO UMA AREA DE DESENVOLVIMENTO
 
 const express = require("express") // IMPORTEI EXPRESS - 1
 const app = express() // INICIALIZEI EXPRESS - 2
@@ -17,7 +21,7 @@ const sqliteConnection = require("./src/database/SQLite/connect")
 sqliteConnection()
 
 //
-const port = 3000 // 3
+const port = process.env.PORT || 3333 // 3
 app.listen(port, () => console.log(`Server is running on port: ${port}`)) // 4
 
 //
