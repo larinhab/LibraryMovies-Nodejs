@@ -56,15 +56,16 @@ class UserController {
             throw new AppError("Informe sua senha antiga!", 400)
         }
         
-        if(password === old_password) {
-            throw new AppError("A senha nova deve ser diferente da antiga!")
-        }
 
         if(password && old_password){
             const checkPassoword = await compare(old_password, user.password)
                 
             if(!checkPassoword){
                 throw new AppError("A senha antiga não confere!")
+            }        
+            
+            if(password === old_password) {
+                throw new AppError("A senha nova deve ser diferente da antiga!")
             }
             
             user.password = await hash(password, 8)
