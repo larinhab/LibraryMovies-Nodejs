@@ -55,18 +55,21 @@ class UserController {
         if(password && !old_password){
             throw new AppError("Informe sua senha antiga!", 400)
         }
-
-        const checkPassoword = await compare(old_password, user.password)
         
-        if(!checkPassoword){
-            throw new AppError("A senha antiga não confere!")
-        }
-
         if(password === old_password) {
             throw new AppError("A senha nova deve ser diferente da antiga!")
         }
 
-        user.password = await hash(password, 8)
+        if(password && old_password){
+            const checkPassoword = await compare(old_password, user.password)
+                
+            if(!checkPassoword){
+                throw new AppError("A senha antiga não confere!")
+            }
+            
+            user.password = await hash(password, 8)
+        }
+        
 
         await knex("users").where({id: user_id}).update({
             name: user.name,
